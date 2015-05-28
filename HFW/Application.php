@@ -7,6 +7,7 @@ use hfw\middlewares\Authorization;
 use hfw\middlewares\BaseMiddleware;
 use hfw\middlewares\PrettyExceptions;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class Application
@@ -61,7 +62,6 @@ class Application {
 
     $this->registerMiddleware(new Authorization());
     $this->registerMiddleware(new Authentication());
-
 
     if ($this->config('debug')) {
       $this->registerMiddleware(new PrettyExceptions());
