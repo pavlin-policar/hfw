@@ -2,12 +2,13 @@
 
 namespace hfw;
 
+use hfw\contracts\LoggerInterface;
 use hfw\middlewares\Authentication;
 use hfw\middlewares\Authorization;
 use hfw\middlewares\BaseMiddleware;
 use hfw\middlewares\PrettyExceptions;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Class Application
@@ -19,11 +20,19 @@ class Application {
   const VERSION = '0.0.1';
 
   /**
-   * @var array
+   * @var HttpKernelInterface[]
    */
   protected $_middleware = [];
 
+  /**
+   * @var Config
+   */
   protected $_config;
+
+  /**
+   * @var LoggerInterface
+   */
+  protected $_logger;
 
   public function __construct() {
     $this->_config = Config::parseConfigFile();

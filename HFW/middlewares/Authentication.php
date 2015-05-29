@@ -2,7 +2,6 @@
 
 namespace hfw\middlewares;
 
-use hfw\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -31,7 +30,7 @@ class Authentication extends BaseMiddleware {
    * @api
    */
   public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true) {
-    if (true) {
+    if (false) {
       throw new \Exception("Not authenticated");
     } else {
       return $this->_next->handle($request, $type, $catch);

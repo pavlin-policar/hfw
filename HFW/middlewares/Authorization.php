@@ -2,8 +2,6 @@
 
 namespace hfw\middlewares;
 
-use hfw\Application;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 

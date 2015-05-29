@@ -31,7 +31,7 @@ class PrettyExceptions extends BaseMiddleware {
    */
   public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true) {
     try {
-      $this->_next->handle($request, $type, $catch);
+      return $this->_next->handle($request, $type, $catch);
     } catch (\Exception $e) {
       $response = new Response();
       $response->setStatusCode(500);

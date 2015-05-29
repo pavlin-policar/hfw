@@ -9,18 +9,20 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @package hfw
  */
-class Controller {
+abstract class Controller {
 
   /**
    * Redirect to given url
    *
-   * @param     $destination
-   * @param int $status
+   * @param       $destination
+   * @param int   $status
+   * @param array $headers
    */
-  public function redirect($destination, $status = 302) {
+  public function redirect($destination, $status = 302, $headers = []) {
     $response = new Response();
     $response->setStatusCode($status);
-    $response->headers->add(['Location' => $destination]);
+    $headers['Location'] = $destination;
+    $response->headers->add($headers);
     $response->send();
   }
 }
