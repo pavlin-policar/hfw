@@ -2,7 +2,7 @@
 
 namespace hfw\middlewares;
 
-use Symfony\Component\HttpFoundation\Request;
+use hfw\Application;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -11,11 +11,23 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * @package hfw\middlewares
  */
 abstract class BaseMiddleware implements HttpKernelInterface {
-
   /**
    * @var HttpKernelInterface
    */
   protected $_next;
+
+  /**
+   * @var Application
+   */
+  protected $_app;
+
+  /**
+   * @param $app
+   */
+  function __construct($app) {
+    $this->_app = $app;
+  }
+
 
   /**
    * @param HttpKernelInterface $next

@@ -3,6 +3,7 @@
 namespace hfw;
 
 use hfw\contracts\LoggerInterface;
+use hfw\logging\TextLogger;
 use hfw\middlewares\Authentication;
 use hfw\middlewares\Authorization;
 use hfw\middlewares\BaseMiddleware;
@@ -36,6 +37,7 @@ class Application {
 
   public function __construct() {
     $this->_config = Config::parseConfigFile();
+    $this->_logger = $this->getLoggerInstance();
   }
 
   /**
@@ -69,15 +71,41 @@ class Application {
   public function run() {
     $request = Request::createFromGlobals();
 
-    $this->registerMiddleware(new Authorization());
-    $this->registerMiddleware(new Authentication());
+    $this->registerMiddleware(new Authorization($this));
+    $this->registerMiddleware(new Authentication($this));
 
     if ($this->config('debug')) {
-      $this->registerMiddleware(new PrettyExceptions());
+      $this->registerMiddleware(new PrettyExceptions($this));
     }
 
     // invoke middleware stack
     $response = $this->_middleware[0]->handle($request);
     $response->send();
+  }
+
+  /**
+   * @return LoggerInterface
+   */
+  public function getLogger() {
+    return $this->_logger;
+  }
+
+  /**
+   * @return LoggerInterface
+   */
+  protected function getLoggerInstance() {
+    switch ($this->config('logging.type')) {
+      case 'text':
+        $logger = new TextLogger($this->config('logging.directory'), $this->config('logging.file'),
+            $this->config('logging.enabled'));
+        if ($this->config('debug')) {
+          $logger->setMinLevel(LoggerInterface::DEBUG);
+        } else {
+          $logger->setMinLevel(LoggerInterface::ERROR);
+        }
+        return $logger;
+      default:
+        throw new \LogicException('Logger type not implemented');
+    }
   }
 }

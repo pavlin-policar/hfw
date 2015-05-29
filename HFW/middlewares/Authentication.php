@@ -33,6 +33,7 @@ class Authentication extends BaseMiddleware {
     if (false) {
       throw new \Exception("Not authenticated");
     } else {
+      $this->_app->getLogger()->info("Some information -> sample log");
       return $this->_next->handle($request, $type, $catch);
     }
   }

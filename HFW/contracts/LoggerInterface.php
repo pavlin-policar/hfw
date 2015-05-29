@@ -8,44 +8,46 @@ namespace hfw\contracts;
  * @package hfw\contracts
  */
 interface LoggerInterface {
-  const FATAL     = 1;
-  const CRITICAL  = 2;
-  const ERROR     = 3;
+  const FATAL     = 7;
+  const CRITICAL  = 6;
+  const ERROR     = 5;
   const WARNING   = 4;
-  const NOTICE    = 5;
-  const INFO      = 6;
-  const DEBUG     = 7;
+  const NOTICE    = 3;
+  const INFO      = 2;
+  const DEBUG     = 1;
 
   /**
    * Enable or disable logging
+   *
+   * @param $enable bool
    */
-  public function setEnabled();
+  public function setEnabled($enable);
 
   /**
    * Log fatal message
    *
-   * @param $message
+   * @param $message string
    */
   public function fatal($message);
 
   /**
    * Log critical message
    *
-   * @param $message
+   * @param $message string
    */
   public function critical($message);
 
   /**
    * Log error message
    *
-   * @param $message
+   * @param $message string
    */
   public function error($message);
 
   /**
    * Log warning message
    *
-   * @param $message
+   * @param $message string
    */
   public function warning($message);
 
@@ -59,14 +61,14 @@ interface LoggerInterface {
   /**
    * Log info
    *
-   * @param $message
+   * @param $message string
    */
   public function info($message);
 
   /**
    * Log debug message
    *
-   * @param $message
+   * @param $message string
    */
   public function debug($message);
 
@@ -74,7 +76,7 @@ interface LoggerInterface {
    * Log message with given log level
    *
    * @param $logLevel
-   * @param $message
+   * @param $message string
    */
   public function log($logLevel, $message);
 }

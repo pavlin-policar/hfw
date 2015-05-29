@@ -1,4 +1,5 @@
 .idea
 vendor/*
+log/*
 composer.lock
 environment.cfg
