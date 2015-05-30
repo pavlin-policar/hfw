@@ -2,8 +2,8 @@
 
 namespace hfw\middlewares;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class Authentication
@@ -33,7 +33,6 @@ class Authentication extends BaseMiddleware {
     if (false) {
       throw new \Exception("Not authenticated");
     } else {
-      $this->_app->getLogger()->info("Some information -> sample log");
       return $this->_next->handle($request, $type, $catch);
     }
   }

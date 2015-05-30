@@ -88,7 +88,7 @@ class NestedArray implements \ArrayAccess {
   protected function getKeysFromOffset($offset) {
     preg_match_all('/(\w+)(?:\.)?/i', $offset, $matches, PREG_SET_ORDER);
     $keys = [];
-    foreach($matches as $match) {
+    foreach ($matches as $match) {
       $keys[] = $match[1];
     }
     return $keys;

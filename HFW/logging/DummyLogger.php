@@ -17,7 +17,6 @@ class DummyLogger implements LoggerInterface {
    * @param $enable bool
    */
   public function setEnabled($enable) {
-    // TODO: Implement setEnabled() method.
   }
 
   /**
@@ -26,7 +25,6 @@ class DummyLogger implements LoggerInterface {
    * @param $message string
    */
   public function fatal($message) {
-    // TODO: Implement fatal() method.
   }
 
   /**
@@ -35,7 +33,6 @@ class DummyLogger implements LoggerInterface {
    * @param $message string
    */
   public function critical($message) {
-    // TODO: Implement critical() method.
   }
 
   /**
@@ -44,7 +41,6 @@ class DummyLogger implements LoggerInterface {
    * @param $message string
    */
   public function error($message) {
-    // TODO: Implement error() method.
   }
 
   /**
@@ -53,7 +49,6 @@ class DummyLogger implements LoggerInterface {
    * @param $message string
    */
   public function warning($message) {
-    // TODO: Implement warning() method.
   }
 
   /**
@@ -62,7 +57,6 @@ class DummyLogger implements LoggerInterface {
    * @param $message
    */
   public function notice($message) {
-    // TODO: Implement notice() method.
   }
 
   /**
@@ -71,7 +65,6 @@ class DummyLogger implements LoggerInterface {
    * @param $message string
    */
   public function info($message) {
-    // TODO: Implement info() method.
   }
 
   /**
@@ -80,7 +73,6 @@ class DummyLogger implements LoggerInterface {
    * @param $message string
    */
   public function debug($message) {
-    // TODO: Implement debug() method.
   }
 
   /**
@@ -90,6 +82,5 @@ class DummyLogger implements LoggerInterface {
    * @param $message string
    */
   public function log($logLevel, $message) {
-    // TODO: Implement log() method.
   }
 }

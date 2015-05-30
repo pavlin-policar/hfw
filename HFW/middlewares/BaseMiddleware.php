@@ -24,7 +24,7 @@ abstract class BaseMiddleware implements HttpKernelInterface {
   /**
    * @param $app
    */
-  function __construct($app) {
+  function __construct(Application $app) {
     $this->_app = $app;
   }
 

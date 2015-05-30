@@ -8,6 +8,7 @@ use hfw\middlewares\Authentication;
 use hfw\middlewares\Authorization;
 use hfw\middlewares\BaseMiddleware;
 use hfw\middlewares\PrettyExceptions;
+use hfw\routing\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -73,6 +74,7 @@ class Application {
 
     $this->registerMiddleware(new Authorization($this));
     $this->registerMiddleware(new Authentication($this));
+    $this->registerMiddleware(new Router($this));
 
     if ($this->config('debug')) {
       $this->registerMiddleware(new PrettyExceptions($this));

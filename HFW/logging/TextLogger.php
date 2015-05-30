@@ -43,20 +43,20 @@ class TextLogger implements LoggerInterface {
    * @var array
    */
   protected $_levels = [
-    self::FATAL     => 'FATAL',
-    self::CRITICAL  => 'CRITICAL',
-    self::ERROR     => 'ERROR',
-    self::WARNING   => 'WARNING',
-    self::NOTICE    => 'NOTICE',
-    self::INFO      => 'INFO',
-    self::DEBUG     => 'DEBUG'
+      self::FATAL    => 'FATAL',
+      self::CRITICAL => 'CRITICAL',
+      self::ERROR    => 'ERROR',
+      self::WARNING  => 'WARNING',
+      self::NOTICE   => 'NOTICE',
+      self::INFO     => 'INFO',
+      self::DEBUG    => 'DEBUG'
   ];
 
   /**
    * @param     $directory
    * @param     $fileName
    * @param     $enabled
-   * @param int $minLevel   Minimum log level at which to write logs, disable for lower levels in production
+   * @param int $minLevel Minimum log level at which to write logs, disable for lower levels in production
    */
   function __construct($directory, $fileName, $enabled = true, $minLevel = LoggerInterface::DEBUG) {
     $this->_directory = $directory;
