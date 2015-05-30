@@ -25,7 +25,7 @@ class Config extends NestedArray {
    * @param string $fileName
    * @return Config
    */
-  public static function parseConfigFile($fileName = 'environment.cfg') {
+  public static function parseConfigFile($fileName = 'config/environment.cfg') {
     $cfg = new Config();
     $cfg->setOptions(parse_ini_file($fileName, true));
     return $cfg;

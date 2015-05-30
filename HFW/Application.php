@@ -4,8 +4,6 @@ namespace hfw;
 
 use hfw\contracts\LoggerInterface;
 use hfw\logging\TextLogger;
-use hfw\middlewares\Authentication;
-use hfw\middlewares\Authorization;
 use hfw\middlewares\BaseMiddleware;
 use hfw\middlewares\PrettyExceptions;
 use hfw\routing\Router;
@@ -52,6 +50,16 @@ class Application {
   }
 
   /**
+   * Set config option
+   *
+   * @param $key
+   * @param $value
+   */
+  public function setConfig($key, $value) {
+    $this->_config[$key] = $value;
+  }
+
+  /**
    * Register a middleware with the application. Will execute as LIFO
    *
    * @param BaseMiddleware $middleware
@@ -60,10 +68,15 @@ class Application {
     if (in_array($middleware, $this->_middleware)) {
       $className = get_class($middleware);
       throw new \RuntimeException("Cyclic middleware stack detected: tried to queue {$className}");
-    } else {
-      count($this->_middleware) > 0 and $middleware->setNext($this->_middleware[0]);
-      array_unshift($this->_middleware, $middleware);
     }
+    foreach ($this->_middleware as $middlewareIterator) {
+      if (get_class($middleware) == get_class($middlewareIterator)) {
+        $className = get_class($middlewareIterator);
+        throw new \RuntimeException("Duplicate middleware detected: tried to queue {$className}");
+      }
+    }
+    count($this->_middleware) > 0 and $this->_middleware[count($this->_middleware) - 1]->setNext($middleware);
+    array_push($this->_middleware, $middleware);
   }
 
   /**
@@ -72,13 +85,10 @@ class Application {
   public function run() {
     $request = Request::createFromGlobals();
 
-    $this->registerMiddleware(new Authorization($this));
-    $this->registerMiddleware(new Authentication($this));
-    $this->registerMiddleware(new Router($this));
-
     if ($this->config('debug')) {
       $this->registerMiddleware(new PrettyExceptions($this));
     }
+    $this->registerMiddleware(new Router($this));
 
     // invoke middleware stack
     $response = $this->_middleware[0]->handle($request);

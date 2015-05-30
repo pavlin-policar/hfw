@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ALL);
+
 session_start();
 date_default_timezone_set('Europe/Ljubljana');
 require_once('vendor/autoload.php');
@@ -10,4 +12,5 @@ if (ltrim($base, '/')) {
 }
 
 $app = new \hfw\Application();
+$app->setConfig('app.namespace', '\\journal');
 $app->run();

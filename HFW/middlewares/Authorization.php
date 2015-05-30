@@ -33,7 +33,9 @@ class Authorization extends BaseMiddleware {
     if (false) {
       return new Response("Not authorized");
     } else {
-      return new Response("Welcome user");
+      $response = $this->_next->handle($request, $type, $catch);
+      $response->setContent('Authorized!<br>' . $response->getContent());
+      return $response;
     }
   }
 }

@@ -1,5 +1,6 @@
 {
-  "name": "hiperbola/HFW",
+  "name": "hiperbola/journal",
+  "desc": "A sample journal application to aid the development of this simple framework",
   "authors": [
     {
       "name": "Pavlin Poličar",
@@ -13,7 +14,7 @@
   "autoload": {
     "psr-4": {
       "hfw\\": "HFW\\",
-      "Mouf\\StackPhp\\" : "src/"
+      "journal\\": "app\\"
     }
   }
 }

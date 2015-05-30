@@ -33,7 +33,9 @@ class Authentication extends BaseMiddleware {
     if (false) {
       throw new \Exception("Not authenticated");
     } else {
-      return $this->_next->handle($request, $type, $catch);
+      $response = $this->_next->handle($request, $type, $catch);
+      $response->setContent('Authenticated!<br>' . $response->getContent());
+      return $response;
     }
   }
 }

@@ -27,7 +27,7 @@ class Route {
   ];
 
   /**
-   * @var string
+   * @var string For named paths
    */
   protected $_name;
 
@@ -47,6 +47,16 @@ class Route {
   protected $_target;
 
   /**
+   * @var string[] In ascending order
+   */
+  protected $_requiredMiddlewares = ['ControllerResolver'];
+
+  /**
+   * @var string[]
+   */
+  protected $_middlewares = [];
+
+  /**
    * @param $method
    * @param $pattern
    * @param $target
@@ -55,6 +65,7 @@ class Route {
     $this->setMethod($method);
     $this->setUri($pattern);
     $this->setTarget($target);
+    $this->_middlewares = $this->_requiredMiddlewares;
     return $this;
   }
 
@@ -121,5 +132,52 @@ class Route {
    */
   public function setTarget($target) {
     $this->_target = $target;
+  }
+
+  /**
+   * @return string[]
+   */
+  public function getMiddlewares() {
+    return $this->_middlewares;
+  }
+
+  /**
+   * Add list of required middlewares that need to run for each route, in ascending order
+   *
+   * @param string[] $middlewares
+   * @return Route $this
+   */
+  public function addRequiredMiddleware(array $middlewares) {
+    while (!empty($middlewares)) {
+      $middleware = array_pop($middlewares);
+      array_push($this->_middlewares, $middleware);
+    }
+    return $this;
+  }
+
+  /**
+   * Remove list of middlewares from current list
+   *
+   * @param string[] $middlewares
+   * @return Route $this
+   */
+  public function removeRequiredMiddleware(array $middlewares) {
+    $this->_middlewares = array_diff($this->_middlewares, $middlewares);
+    return $this;
+  }
+
+  /**
+   * Override current list of middlewares with given list
+   *
+   * @param string[] $middlewares
+   * @return Route $this
+   */
+  public function setRequiredMiddleware(array $middlewares) {
+    $this->_middlewares = $this->_requiredMiddlewares;
+    while (!empty($middlewares)) {
+      $middleware = array_pop($middlewares);
+      array_push($this->_middlewares, $middleware);
+    }
+    return $this;
   }
 }
