@@ -22,7 +22,7 @@ class Application {
   /**
    * @var HttpKernelInterface[]
    */
-  protected $_middleware = [];
+  protected $_middlewares = [];
 
   /**
    * @var Config
@@ -65,18 +65,18 @@ class Application {
    * @param BaseMiddleware $middleware
    */
   public function registerMiddleware(BaseMiddleware $middleware) {
-    if (in_array($middleware, $this->_middleware)) {
+    if (in_array($middleware, $this->_middlewares)) {
       $className = get_class($middleware);
       throw new \RuntimeException("Cyclic middleware stack detected: tried to queue {$className}");
     }
-    foreach ($this->_middleware as $middlewareIterator) {
+    foreach ($this->_middlewares as $middlewareIterator) {
       if (get_class($middleware) == get_class($middlewareIterator)) {
         $className = get_class($middlewareIterator);
         throw new \RuntimeException("Duplicate middleware detected: tried to queue {$className}");
       }
     }
-    count($this->_middleware) > 0 and $this->_middleware[count($this->_middleware) - 1]->setNext($middleware);
-    array_push($this->_middleware, $middleware);
+    count($this->_middlewares) > 0 and $this->_middlewares[count($this->_middlewares) - 1]->setNext($middleware);
+    array_push($this->_middlewares, $middleware);
   }
 
   /**
@@ -91,7 +91,7 @@ class Application {
     $this->registerMiddleware(new Router($this));
 
     // invoke middleware stack
-    $response = $this->_middleware[0]->handle($request);
+    $response = $this->_middlewares[0]->handle($request);
     $response->send();
   }
 

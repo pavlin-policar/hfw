@@ -4,6 +4,7 @@ namespace hfw\routing;
 
 use Closure;
 use hfw\exceptions\FileNotFoundException;
+use hfw\exceptions\InvalidRouteParameterException;
 use hfw\exceptions\NotImplementedException;
 use hfw\middlewares\BaseMiddleware;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +28,15 @@ class Router extends BaseMiddleware {
    * @var RouteFactory
    */
   protected $_routeFactory = null;
+
+  /**
+   * @var string[] Supported match types with their respective regex
+   */
+  protected $_matchTypes = [
+      'i' => '\d+',
+      'w' => '[a-zA-z]+',
+      'a' => '.+'
+  ];
 
   /**
    * Register GET route
@@ -118,10 +128,6 @@ class Router extends BaseMiddleware {
    * Match request to a registered route, and add any url parameters given to request attributes. Also specify, in
    * request attributes, the invocation method that the specific route requires.
    *
-   * TODO slight bug, probably would be better if specified types of things to match e.g. i for integer, s for string
-   * Currently running into slight problem that any parameter e.g. :id will match /create if create is registered
-   * after the one that matches :id
-   *
    * @param Request $request
    */
   public function matchRequest(Request &$request) {
@@ -144,13 +150,11 @@ class Router extends BaseMiddleware {
       }
 
       $regex = $route->getUri();
-      preg_match('/:[^\/]+/', $regex, $paramNames);
-      // replace any slashes in uri with regex slashes
-      $regex = preg_replace('/\//', '\\\/', $regex);
-      // replace any parameter in ':param' format with regex expression
-      $regex = preg_replace('/:[^\/]+/', '([^\/]*)', $regex);
-      $regex = '/^' . $regex . '$/';
+      // get all parameter names from route uri match
+      preg_match_all('`(?:/\[[a-z]:([^/]+)\])`', $regex, $paramNames);
+      $paramNames = $paramNames[1];
 
+      $regex = $this->compileRegex($route->getUri());
       preg_match($regex, $uri, $matches);
 
       if (count($matches) > 0) {
@@ -158,7 +162,7 @@ class Router extends BaseMiddleware {
         array_shift($matches);
         $params = [];
         foreach ($paramNames as $index => $paramName) {
-          $params[ltrim($paramName, ':')] = $matches[$index];
+          $params[$paramName] = $matches[$index];
         }
         // save uri parameters to request attributes
         $request->attributes->add($params);
@@ -168,10 +172,44 @@ class Router extends BaseMiddleware {
         $this->registerMiddlewaresWithApp($route->getMiddlewares());
         break;
       }
-      if (!$request->attributes->has('invocation')) {
-        $request->attributes->set('invocation', 'errorController@notFound');
-      }
     }
+    if (!$request->attributes->has('invocation')) {
+      $this->routeNotFoundHandler($request);
+    }
+  }
+
+  /**
+   * Sets default action for what happens if route cannot be matched, adds invocation method to request and registers
+   * required middlewares
+   *
+   * @param Request $request
+   * @throws NotImplementedException
+   */
+  protected function routeNotFoundHandler(Request $request) {
+    $request->attributes->set('invocation', 'ErrorController@notFound');
+    $this->registerMiddlewaresWithApp(Route::$requiredMiddlewares);
+  }
+
+  /**
+   * Compile route match string in its format to valid regex
+   *
+   * @param $regex
+   * @return string
+   * @throws InvalidRouteParameterException
+   */
+  protected function compileRegex($regex) {
+    $matchTypes = $this->_matchTypes;
+    $regex = preg_replace_callback('`\/\[(\w):(\w+)\]`', function ($match) use ($matchTypes) {
+      list(, $type,) = $match;
+      if (isset($matchTypes[$type])) {
+        return '/(' . $matchTypes[$type] . ')';
+      } else {
+        throw new InvalidRouteParameterException(
+            "Tried to match parameter of type '{$type}' which is not a valid parameter. See list of valid parameters.");
+      }
+    }, $regex);
+    $regex = '`^' . $regex . '\/?$`';
+    return $regex;
   }
 
   /**

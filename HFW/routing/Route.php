@@ -49,7 +49,7 @@ class Route {
   /**
    * @var string[] In ascending order
    */
-  protected $_requiredMiddlewares = ['ControllerResolver'];
+  public static $requiredMiddlewares = ['ControllerResolver'];
 
   /**
    * @var string[]
@@ -65,7 +65,7 @@ class Route {
     $this->setMethod($method);
     $this->setUri($pattern);
     $this->setTarget($target);
-    $this->_middlewares = $this->_requiredMiddlewares;
+    $this->_middlewares = static::$requiredMiddlewares;
     return $this;
   }
 
@@ -173,7 +173,7 @@ class Route {
    * @return Route $this
    */
   public function setRequiredMiddleware(array $middlewares) {
-    $this->_middlewares = $this->_requiredMiddlewares;
+    $this->_middlewares = static::$requiredMiddlewares;
     while (!empty($middlewares)) {
       $middleware = array_pop($middlewares);
       array_push($this->_middlewares, $middleware);
